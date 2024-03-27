@@ -13,6 +13,7 @@
     "three": "^0.162.0",
     "three-js": "^79.0.0",
     "three-orbit-controls": "^82.1.0",
+    "three-orbitcontrols": "^2.110.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
