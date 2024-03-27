@@ -6,7 +6,6 @@ function Navbar({
   handleObjectChange,
   handleSizeChange,
   activateBorder,
-  objectSize,
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [objectDropdownVisible, setObjectDropdownVisible] = useState(false);
