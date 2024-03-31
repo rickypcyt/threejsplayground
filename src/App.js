@@ -4,7 +4,7 @@ import Navbar from "./Navbar.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 function App() {
-  const containerRef = useRef();
+  const containerRef = useRef(); // Reference to the container for the renderer
   const [cubeColor, setCubeColor] = useState(0xffffff); // Initial color is white
   const [selectedObject, setSelectedObject] = useState("cube"); // Initial selected object is cube
   const [selectedObjectMesh, setSelectedObjectMesh] = useState(null); // Reference to the selected object's mesh
@@ -27,17 +27,17 @@ function App() {
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    containerRef.current.appendChild(renderer.domElement);
+    containerRef.current.appendChild(renderer.domElement); // Append renderer to the container
     rendererRef.current = renderer; // Store the renderer instance in the ref
 
     // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-    controls.dampingFactor = 0.25;
-    controls.screenSpacePanning = false;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.minDistance = 1;
-    controls.maxDistance = 10;
+    controls.enableDamping = true; // Enable damping for smooth movements
+    controls.dampingFactor = 0.25; // Damping factor for damping
+    controls.screenSpacePanning = false; // Disable screen space panning
+    controls.maxPolarAngle = Math.PI / 2; // Set max polar angle for controls
+    controls.minDistance = 1; // Set min distance for controls
+    controls.maxDistance = 10; // Set max distance for controls
 
     // Object
     let mesh;
@@ -82,18 +82,19 @@ function App() {
     scene.add(mesh);
     setSelectedObjectMesh(mesh); // Store the selected object's mesh
 
+    // Animation function
     const animate = () => {
       requestAnimationFrame(animate);
 
-      mesh.rotation.x += 0.01;
-      mesh.rotation.y += 0.01;
+      mesh.rotation.x += 0.01; // Rotate the mesh on x-axis
+      mesh.rotation.y += 0.01; // Rotate the mesh on y-axis
 
-      controls.update(); // Actualiza los controles en cada frame
+      controls.update(); // Update controls in each frame
 
-      renderer.render(scene, camera);
+      renderer.render(scene, camera); // Render the scene
     };
 
-    animate();
+    animate(); // Start animation loop
 
     // Handle window resize
     const handleResize = () => {
@@ -102,50 +103,57 @@ function App() {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize); // Listen for window resize events
 
-    // Cleanup
+    // Cleanup function
     return () => {
       const currentRenderer = rendererRef.current;
       const currentContainer = containerRef.current;
       if (currentRenderer && currentContainer) {
-        currentContainer.removeChild(currentRenderer.domElement);
+        currentContainer.removeChild(currentRenderer.domElement); // Remove renderer from the container
       }
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize); // Remove event listener for window resize
     };
-  }, [cubeColor, selectedObject, objectSize]);
+  }, [cubeColor, selectedObject, objectSize]); // Re-run effect when cubeColor, selectedObject, or objectSize change
 
+  // Handler function to change cube color
   const handleColorChange = (color) => {
     setCubeColor(color);
   };
 
+  // Handler function to change selected object
   const handleObjectChange = (object) => {
     setSelectedObject(object);
   };
 
+  // Handler function to change object size
   const handleSizeChange = (size) => {
     setObjectSize(size);
   };
 
-  const activateBorder = (object) => {
+  // Handler function to activate object border
+  const activateBorder = () => {
     if (selectedObjectMesh) {
       // Toggle wireframe
       selectedObjectMesh.material.wireframe = !selectedObjectMesh.material.wireframe;
     }
   };
 
+  // Render component
   return (
     <div>
+      {/* Navbar component */}
       <Navbar
-        handleColorChange={handleColorChange}
-        handleObjectChange={handleObjectChange}
-        handleSizeChange={handleSizeChange} // Pass the function to Navbar
-        activateBorder={activateBorder}
-        objectSize={objectSize} // Pass the object size to Navbar
+        handleColorChange={handleColorChange} // Pass color change handler function
+        handleObjectChange={handleObjectChange} // Pass object change handler function
+        handleSizeChange={handleSizeChange} // Pass size change handler function
+        activateBorder={activateBorder} // Pass activate border handler function
+        objectSize={objectSize} // Pass object size to Navbar
       />
+      {/* Container for the renderer */}
       <div ref={containerRef} />
     </div>
   );
 }
 
-export default App;
+export default App; // Export App component
